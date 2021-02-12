@@ -14,6 +14,8 @@ public class guidesign {
         JMenu menu = new JMenu("Arkiv");
         JMenuBar menubar = new JMenuBar();
         JMenuItem spara = new JMenuItem("Spara din text bror");
+        JMenuItem ny = new JMenuItem("Ny Textfil");
+        menu.add(ny);
         menu.add(spara);
         menubar.add(menu);
         frame.setJMenuBar(menubar);
