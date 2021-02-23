@@ -4,13 +4,14 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.net.URL;
 
 public class guidesign {
     public guidesign() {
         JMenu menu = new JMenu("Arkiv");
         menubar = new JMenuBar();
-        JMenuItem spara = new JMenuItem("Spara din text bror");
+        JMenuItem spara = new JMenuItem("Spara din text bror som");
         JMenuItem ny = new JMenuItem("Ny Textfil");
         JMenuItem open = new JMenuItem("Öppna ");
         donate = new JMenuItem("Donera");
@@ -20,19 +21,12 @@ public class guidesign {
         menu.add(ny);
         menu.add(spara);
         menubar.add(menu);
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                skrivyta.setText("");
-            }
-        });
-        copyTextButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Clipboard kopiera = Toolkit.getDefaultToolkit().getSystemClipboard();
-                kopiera.setContents(new StringSelection(skrivyta.getText()), null);
 
-            }
+        clearButton.addActionListener(e -> skrivyta.setText(""));
+        copyTextButton.addActionListener(e -> {
+            Clipboard kopiera = Toolkit.getDefaultToolkit().getSystemClipboard();
+            kopiera.setContents(new StringSelection(skrivyta.getText()), null);
+
         });
         donate.addActionListener(new ActionListener() {
             @Override
@@ -40,6 +34,53 @@ public class guidesign {
                 try {
                     Desktop.getDesktop().browse(new URL("https://streamlabs.com/tmesb/tip").toURI());
                 } catch (Exception e) {}
+            }
+        });
+        spara.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+             String filnamn = JOptionPane.showInputDialog("Vad ska filen heta?");
+
+            String string = skrivyta.getText();
+            try {
+                BufferedWriter writer =
+                        new BufferedWriter( new FileWriter("exempel.txt"));
+                writer.write(string);
+                writer.close();
+            }   catch (IOException e){
+                e.printStackTrace();
+            }
+
+            }
+        });
+        open.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                JFileChooser fc = new JFileChooser();
+                int result = fc.showOpenDialog(null);
+                String filename;
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    filename = fc.getSelectedFile().getAbsolutePath();
+                } else {
+                    filename = null;
+                }
+
+                FileReader fr = null;
+                try {
+                    fr = new FileReader(filename);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                BufferedReader inFile = new BufferedReader(fr);
+                String line;
+                try {
+                    while ((line = inFile.readLine()) != null) {
+                        skrivyta.append(line+"\n");
+                    }
+                    inFile.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -61,6 +102,7 @@ public class guidesign {
     private JTextArea skrivyta;
     private JButton clearButton;
     private JButton copyTextButton;
+    private JTextArea textArea1;
     private JMenuItem donate;
-    JMenuBar menubar;
+    private JMenuBar menubar;
 }
