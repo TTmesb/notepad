@@ -16,13 +16,15 @@ public class guidesign {
         JMenuItem open = new JMenuItem("Öppna ");
         donate = new JMenuItem("Donera");
 
-        menu.add(donate);
-        menu.add(open);
-        menu.add(ny);
-        menu.add(spara);
         menubar.add(menu);
+        menu.add(ny);
+        menu.add(open);
+        menu.add(spara);
+        menu.add(donate);
 
         clearButton.addActionListener(e -> skrivyta.setText(""));
+        ny.addActionListener(e -> skrivyta.setText(""));
+
         copyTextButton.addActionListener(e -> {
             Clipboard kopiera = Toolkit.getDefaultToolkit().getSystemClipboard();
             kopiera.setContents(new StringSelection(skrivyta.getText()), null);
@@ -32,27 +34,39 @@ public class guidesign {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
-                    Desktop.getDesktop().browse(new URL("https://streamlabs.com/tmesb/tip").toURI());
+                    Desktop.getDesktop().browse(new URL("https://www.barncancerfonden.se/").toURI());
                 } catch (Exception e) {}
             }
         });
         spara.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-             String filnamn = JOptionPane.showInputDialog("Vad ska filen heta?");
+            /* String filnamn = JOptionPane.showInputDialog("Vad ska filen heta?");
 
             String string = skrivyta.getText();
-            try {
-                BufferedWriter writer =
-                        new BufferedWriter( new FileWriter("exempel.txt"));
+             try {
+                BufferedWriter writer = new BufferedWriter( new FileWriter(filnamn +".txt"));
                 writer.write(string);
                 writer.close();
-            }   catch (IOException e){
+            } catch (IOException e){
                 e.printStackTrace();
-            }
+            }*/ //Fungerande filsparning i src, me valfritt namn
 
-            }
+                    JFileChooser chooser = new JFileChooser();
+                    chooser.setSelectedFile(new File("c:/Temp2/Filename.txt"));
+                    chooser.showSaveDialog(null);
+
+                String string = skrivyta.getText();
+                try {
+                    BufferedWriter writer = new BufferedWriter( new FileWriter("exempel.txt"));
+                    writer.write(string);
+                    writer.close();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+                }
         });
+
         open.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
